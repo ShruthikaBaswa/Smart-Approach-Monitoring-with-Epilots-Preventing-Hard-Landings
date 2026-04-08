@@ -1,4 +1,4 @@
-def handler(request):
+def app(request):
     return {
         "statusCode": 200,
         "body": "Smart Approach Monitoring with E-Pilots 🚀"
