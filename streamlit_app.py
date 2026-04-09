@@ -1,46 +1,41 @@
 import streamlit as st
-import time
 
-st.title("AI-Based Smart Approach Monitoring System ✈️")
+# TITLE
+st.title("Smart Approach Monitoring with E-Pilots ✈️")
+st.write("This project predicts hard landing risk using flight parameters.")
 
-st.write("Predicts hard landing risk using flight parameters.")
+# INPUTS (same as your Django form)
+approach_speed = st.number_input("Approach Speed (knots)", min_value=0, max_value=180)
+altitude = st.number_input("Altitude at Threshold (feet)", min_value=0, max_value=100)
+wind_speed = st.number_input("Wind Speed (knots)", min_value=0, max_value=50)
+runway = st.selectbox("Runway Condition", ["Dry", "Wet", "Icy"])
+aircraft_weight = st.number_input("Aircraft Weight (tons)", min_value=0, max_value=500)
+pilot_experience = st.number_input("Pilot Experience (years)", min_value=0, max_value=40)
 
-# Inputs
-speed = st.number_input("Approach Speed (knots)", min_value=0, max_value=180, value=120)
-altitude = st.number_input("Altitude at Threshold (feet)", min_value=0, max_value=100, value=80)
-wind_speed = st.number_input("Wind Speed (knots)", min_value=0, max_value=50, value=10)
-runway = st.selectbox("Runway Condition", ["Dry", "Wet", "Snow"])
-weight = st.number_input("Aircraft Weight (tons)", min_value=0, max_value=500, value=200)
-experience = st.number_input("Pilot Experience (years)", min_value=0, max_value=40, value=5)
-
+# BUTTON
 if st.button("Predict"):
 
-    with st.spinner("Analyzing flight data..."):
-        time.sleep(2)
-
-    # Risk score system (REALISTIC LOGIC)
-    risk_score = 0
-
-    if speed > 150:
-        risk_score += 2
-    if altitude < 50:
-        risk_score += 2
-    if wind_speed > 30:
-        risk_score += 2
-    if runway == "Wet":
-        risk_score += 1
-    if runway == "Snow":
-        risk_score += 2
-    if weight > 300:
-        risk_score += 1
-    if experience < 5:
-        risk_score += 2
-
-    # FINAL DECISION
-    if risk_score >= 5:
-        st.error("⚠️ YES - Hard Landing Risk")
+    # CHECK EMPTY INPUT
+    if approach_speed == 0 or altitude == 0:
+        st.warning("⚠️ Please enter all values")
+    
     else:
-        st.success("✅ NO - Safe Landing")
+        # SAME LOGIC AS YOUR DJANGO CODE
+        if (pilot_experience < 5 or 
+            approach_speed > 150 or 
+            altitude > 40 or 
+            wind_speed > 20):
 
-    # Show score
-    st.info(f"Risk Score: {risk_score}")
+            result = "Yes"  # Hard landing risk
+
+        else:
+            if runway == "Icy" or aircraft_weight > 200:
+                result = "Yes"
+            else:
+                result = "No"
+
+        # OUTPUT
+        if result == "Yes":
+            st.error("⚠️ Prediction: Hard Landing is YES")
+        else:
+            st.success("✅ Prediction: Hard Landing is NO")
