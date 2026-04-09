@@ -72,13 +72,13 @@ elif st.session_state.page == "register":
     new_pass = st.text_input("Password", type="password")
 
      st.info("""
-    Password must contain:
-    - At least 8 characters
-    - One uppercase letter
-    - One lowercase letter
-    - One number
-    - One special character (@$!%*?&)
-    """)
+        Password must contain:
+        - At least 8 characters
+        - One uppercase letter
+        - One lowercase letter
+        - One number
+        - One special character (@$!%*?&)
+        """)
 
     if st.button("Register"):
         if new_user and new_pass:
