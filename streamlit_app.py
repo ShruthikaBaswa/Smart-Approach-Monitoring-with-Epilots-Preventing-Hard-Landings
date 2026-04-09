@@ -1,14 +1,7 @@
 import streamlit as st
-import re
+
 # ---------- PAGE STATE ----------
-def is_strong_password(password):
-    if (len(password) >= 8 and
-        re.search(r"[A-Z]", password) and
-        re.search(r"[a-z]", password) and
-        re.search(r"[0-9]", password) and
-        re.search(r"[@$!%*?&]", password)):
-        return True
-    return False
+
 if "users" not in st.session_state:
     st.session_state.users = {}
 if "page" not in st.session_state:
@@ -70,15 +63,6 @@ elif st.session_state.page == "register":
 
     new_user = st.text_input("Username")
     new_pass = st.text_input("Password", type="password")
-
-     st.info("""
-        Password must contain:
-        - At least 8 characters
-        - One uppercase letter
-        - One lowercase letter
-        - One number
-        - One special character (@$!%*?&)
-        """)
 
     if st.button("Register"):
         if new_user and new_pass:
