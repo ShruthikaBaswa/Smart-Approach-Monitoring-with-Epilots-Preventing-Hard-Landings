@@ -42,14 +42,14 @@ elif st.session_state.page == "login":
     password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-    if username and password:
-        if username in st.session_state.users and st.session_state.users[username] == password:
-            st.success("Login Successful ✅")
-            go_predict()
+        if username and password:
+            if username in st.session_state.users and st.session_state.users[username] == password:
+                st.success("Login Successful ✅")
+                go_predict()
+            else:
+                st.error("User not registered or incorrect password ❌")
         else:
-            st.error("User not registered or incorrect password ❌")
-    else:
-        st.error("Please enter username and password")
+            st.error("Please enter username and password")
 
     if st.button("Back to Home"):
         go_home()
@@ -64,14 +64,14 @@ elif st.session_state.page == "register":
     new_pass = st.text_input("Password", type="password")
 
     if st.button("Register"):
-    if new_user and new_pass:
-        if new_user in st.session_state.users:
-            st.error("User already exists ❌")
+        if new_user and new_pass:
+            if new_user in st.session_state.users:
+                st.error("User already exists ❌")
+            else:
+                st.session_state.users[new_user] = new_pass
+                st.success("Account Created Successfully ✅")
         else:
-            st.session_state.users[new_user] = new_pass
-            st.success("Account Created Successfully ✅")
-    else:
-        st.error("Please fill all fields")
+            st.error("Please fill all fields")
 
     if st.button("Back to Home"):
         go_home()
