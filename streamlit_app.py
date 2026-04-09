@@ -1,11 +1,33 @@
 import streamlit as st
+import json
+import os
+import re
 
+def is_strong_password(password):
+    if (len(password) >= 8 and
+        re.search(r"[A-Z]", password) and
+        re.search(r"[a-z]", password) and
+        re.search(r"[0-9]", password) and
+        re.search(r"[@$!%*?&]", password)):
+        return True
+    return False
+
+USER_FILE = "users.json"
+
+def load_users():
+    if os.path.exists(USER_FILE):
+        with open(USER_FILE, "r") as f:
+            return json.load(f)
+    return {}
+
+def save_users(users):
+    with open(USER_FILE, "w") as f:
+        json.dump(users, f)
 # ---------- PAGE STATE ----------
-
-if "users" not in st.session_state:
-    st.session_state.users = {}
 if "page" not in st.session_state:
     st.session_state.page = "home"
+if "users" not in st.session_state:
+    st.session_state.users = load_users()
 
 # ---------- NAVIGATION ----------
 def go_home():
@@ -64,20 +86,30 @@ elif st.session_state.page == "register":
     new_user = st.text_input("Username")
     new_pass = st.text_input("Password", type="password")
 
+    st.info("""
+    Password must contain:
+    - At least 8 characters
+    - One uppercase letter
+    - One lowercase letter
+    - One number
+    - One special character (@$!%*?&)
+    """)
+
     if st.button("Register"):
         if new_user and new_pass:
     
-            # Check if username already exists
             if new_user in st.session_state.users:
                 st.error("⚠️ Account already exists. Please go to Login page.")
-                if st.button("Go to Login"):
-                    go_login()
-            # Check if password already used (optional but as per your requirement)
+    
             elif new_pass in st.session_state.users.values():
-                st.error("⚠️ Password already used. Please choose a different password.")
+                st.error("⚠️ Password already used. Try a different password.")
+    
+            elif not is_strong_password(new_pass):
+                st.error("⚠️ Weak password! Follow password rules below.")
     
             else:
                 st.session_state.users[new_user] = new_pass
+                save_users(st.session_state.users)
                 st.success("Account Created Successfully ✅")
     
         else:
