@@ -103,34 +103,26 @@ elif st.session_state.page == "predict":
 
     if st.button("Predict"):
 
-        if approach_speed == 0 or altitude == 0:
-            st.warning("Enter all values")
-        else:
-            # SAME DJANGO LOGIC
-            if (pilot_experience < 5 or 
-                approach_speed > 150 or 
-                altitude > 40 or 
-                wind_speed > 20):
+    if approach_speed == 0 or altitude == 0:
+        st.warning("Enter all values")
 
+    else:
+        # SAME DJANGO LOGIC
+        if (pilot_experience < 5 or 
+            approach_speed > 150 or 
+            altitude > 40 or 
+            wind_speed > 20):
+
+            result = "Yes"
+
+        else:
+            if runway == "Icy" or aircraft_weight > 200:
                 result = "Yes"
             else:
-                if runway == "Icy" or aircraft_weight > 200:
-                    result = "Yes"
-                else:
-                    result = "No"
+                result = "No"
 
-            st.markdown(f"""
-            <div style="background-color:#d1ecf1;padding:15px;border-radius:5px;">
-            <b>Prediction: Hard Landing is {result}</b>
-            </div>
-            """, unsafe_allow_html=True)
-
-    if st.button("Logout"):
-        go_home()
-
-            if result == "Yes":
-                st.error("⚠️ Prediction: Hard Landing is YES")
-            else:
-                st.success("✅ Prediction: Hard Landing is NO")
-
-    st.button("Logout", on_click=go_home)
+        # ✅ FIXED INDENTATION HERE
+        if result == "Yes":
+            st.error("⚠️ Prediction: Hard Landing is YES")
+        else:
+            st.success("✅ Prediction: Hard Landing is NO")
