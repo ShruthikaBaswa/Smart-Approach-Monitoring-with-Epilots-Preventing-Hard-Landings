@@ -75,8 +75,6 @@ elif st.session_state.page == "register":
             # Check if password already used (optional but as per your requirement)
             elif new_pass in st.session_state.users.values():
                 st.error("⚠️ Password already used. Please choose a different password.")
-            elif not is_strong_password(new_pass):
-                st.error("⚠️ Weak password! Follow password rules.")
     
             else:
                 st.session_state.users[new_user] = new_pass
