@@ -1,10 +1,29 @@
 import streamlit as st
 
-# SESSION STATE (for login simulation)
+# ---------- PAGE STATE ----------
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
-# ---------- NAVIGATION FUNCTIONS ----------
+# ---------- CUSTOM STYLE ----------
+st.markdown("""
+<style>
+body {
+    background-color: #f0f2f6;
+}
+.box {
+    background-color: rgba(255,255,255,0.9);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 100px;
+}
+.btn {
+    margin: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ---------- NAVIGATION ----------
 def go_home():
     st.session_state.page = "home"
 
@@ -20,16 +39,22 @@ def go_predict():
 
 # ---------- HOME PAGE ----------
 if st.session_state.page == "home":
-    st.title("Smart Approach Monitoring with E-Pilots ✈️")
 
-    st.write("Predicting Hard Landings for Safer Flights")
+    st.markdown('<div class="box">', unsafe_allow_html=True)
+    st.markdown("<h2>Smart approach monitoring with Epilots: Preventing Hard Landing</h2>", unsafe_allow_html=True)
 
-    st.button("Login", on_click=go_login)
-    st.button("Register", on_click=go_register)
+    if st.button("Login"):
+        go_login()
+
+    if st.button("Register"):
+        go_register()
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ---------- LOGIN PAGE ----------
 elif st.session_state.page == "login":
+
     st.title("Epilots Login")
 
     username = st.text_input("Username")
@@ -37,35 +62,38 @@ elif st.session_state.page == "login":
 
     if st.button("Login"):
         if username and password:
-            st.success("Login Successful ✅")
-            st.session_state.page = "predict"
+            st.success("Login successful")
+            go_predict()
         else:
             st.error("Invalid username or password")
 
-    st.button("Back to Home", on_click=go_home)
+    if st.button("Home"):
+        go_home()
 
 
 # ---------- REGISTER PAGE ----------
 elif st.session_state.page == "register":
-    st.title("Register")
 
-    new_user = st.text_input("Username")
-    new_pass = st.text_input("Password", type="password")
+    st.title("Registration Page")
+
+    user = st.text_input("Username")
+    pwd = st.text_input("Password", type="password")
 
     if st.button("Register"):
-        if new_user and new_pass:
-            st.success("Account Created Successfully ✅")
+        if user and pwd:
+            st.success("Account created successfully")
         else:
-            st.error("Please fill all fields")
+            st.error("Fill all details")
 
-    st.button("Back to Home", on_click=go_home)
+    if st.button("Home"):
+        go_home()
 
 
 # ---------- PREDICTION PAGE ----------
 elif st.session_state.page == "predict":
-    st.title("Flight Hard Landing Prediction")
 
-    # INPUTS (same as your Django form)
+    st.markdown("<h2 style='text-align:center;'>Flight Hard Landing Prediction</h2>", unsafe_allow_html=True)
+
     approach_speed = st.number_input("Approach Speed (knots)", min_value=0, max_value=180)
     altitude = st.number_input("Altitude at Threshold (feet)", min_value=0, max_value=100)
     wind_speed = st.number_input("Wind Speed (knots)", min_value=0, max_value=50)
@@ -76,22 +104,29 @@ elif st.session_state.page == "predict":
     if st.button("Predict"):
 
         if approach_speed == 0 or altitude == 0:
-            st.warning("⚠️ Please enter all values")
-
+            st.warning("Enter all values")
         else:
-            # SAME LOGIC AS DJANGO
+            # SAME DJANGO LOGIC
             if (pilot_experience < 5 or 
                 approach_speed > 150 or 
                 altitude > 40 or 
                 wind_speed > 20):
 
                 result = "Yes"
-
             else:
                 if runway == "Icy" or aircraft_weight > 200:
                     result = "Yes"
                 else:
                     result = "No"
+
+            st.markdown(f"""
+            <div style="background-color:#d1ecf1;padding:15px;border-radius:5px;">
+            <b>Prediction: Hard Landing is {result}</b>
+            </div>
+            """, unsafe_allow_html=True)
+
+    if st.button("Logout"):
+        go_home()
 
             if result == "Yes":
                 st.error("⚠️ Prediction: Hard Landing is YES")
